@@ -251,3 +251,137 @@ Console.WriteLine("Implement each method in Exercises/ControlFlowAdvanced.cs, th
 // Console.WriteLine($"GradeFromMark(85)           = \"{Exercises.ControlFlowAdvanced.GradeFromMark(85)}\"");
 // Console.WriteLine($"TrafficLightAction(\"red\")    = \"{Exercises.ControlFlowAdvanced.TrafficLightAction("red")}\"");
 // Console.WriteLine($"TrafficLightAction(\"amber\")  = \"{Exercises.ControlFlowAdvanced.TrafficLightAction("amber")}\"");
+
+
+Console.WriteLine("\n\n=== LISTS — examples ===\n");
+
+Console.WriteLine("-- Lesson A: generics in one minute --");
+Console.WriteLine($"OneInt()                        = [{string.Join(", ", Lessons.Lists.OneInt())}]   ← List<int>");
+Console.WriteLine($"OneString()                     = [{string.Join(", ", Lessons.Lists.OneString())}]   ← List<string>");
+
+Console.WriteLine("\n-- Lesson B: lists grow, arrays don't --");
+Console.WriteLine($"ArrayCantGrow([1,2,3], 4)       = [{string.Join(", ", Lessons.Lists.ArrayCantGrow(new[] { 1, 2, 3 }, 4))}]   ← manual realloc + copy");
+Console.WriteLine($"ListGrowsFreely()               = [{string.Join(", ", Lessons.Lists.ListGrowsFreely())}]   ← just call Add");
+
+Console.WriteLine("\n-- Lesson C: four creation forms --");
+Console.WriteLine($"EmptyList().Count               = {Lessons.Lists.EmptyList().Count}");
+Console.WriteLine($"WithInitialiser()               = [{string.Join(", ", Lessons.Lists.WithInitialiser())}]");
+Console.WriteLine($"CollectionExpression()          = [{string.Join(", ", Lessons.Lists.CollectionExpression())}]   ← C# 12+ form");
+Console.WriteLine($"WithCapacityGotcha().Count      = {Lessons.Lists.WithCapacityGotcha().Count}   ← capacity hint, NOT pre-filled");
+
+Console.WriteLine("\n-- Lesson D: .Count, indexing, mutation --");
+List<int> listDemo = new List<int> { 10, 20, 30 };
+Console.WriteLine($"HowMany([10,20,30])             = {Lessons.Lists.HowMany(listDemo)}   ← .Count, not .Length");
+Console.WriteLine($"FirstElement([10,20,30])        = {Lessons.Lists.FirstElement(listDemo)}");
+Console.WriteLine($"LastElement([10,20,30])         = {Lessons.Lists.LastElement(listDemo)}");
+Lessons.Lists.SetFirst(listDemo, 999);
+Console.WriteLine($"after SetFirst(listDemo, 999)    listDemo is now [{string.Join(", ", listDemo)}]   ← caller's list was mutated");
+try { Lessons.Lists.AccessOutOfBounds(new List<int> { 1, 2, 3 }); }
+catch (ArgumentOutOfRangeException) { Console.WriteLine("AccessOutOfBounds([1,2,3])       threw ArgumentOutOfRangeException   ← different type than arrays"); }
+
+Console.WriteLine("\n-- Lesson E: Add / Insert / Remove / RemoveAt / Clear --");
+Console.WriteLine($"AddToEnd([1,2], 3)              = [{string.Join(", ", Lessons.Lists.AddToEnd(new List<int> { 1, 2 }, 3))}]");
+Console.WriteLine($"InsertAtFront([2,3], 1)         = [{string.Join(", ", Lessons.Lists.InsertAtFront(new List<int> { 2, 3 }, 1))}]");
+Console.WriteLine($"RemoveFirstMatch([10,20,30,20], 20) = [{string.Join(", ", Lessons.Lists.RemoveFirstMatch(new List<int> { 10, 20, 30, 20 }, 20))}]   ← only first 20 removed");
+Console.WriteLine($"RemoveAtIndex([10,20,30,40], 1) = [{string.Join(", ", Lessons.Lists.RemoveAtIndex(new List<int> { 10, 20, 30, 40 }, 1))}]   ← by INDEX");
+Console.WriteLine($"ClearAll([1,2,3]).Count         = {Lessons.Lists.ClearAll(new List<int> { 1, 2, 3 }).Count}");
+
+Console.WriteLine("\n-- Lesson F: iteration --");
+List<int> listNumbers = new List<int> { 1, 2, 3, 4, 5 };
+Console.WriteLine($"SumWithForeach([1..5])          = {Lessons.Lists.SumWithForeach(listNumbers)}");
+Console.WriteLine($"SumWithFor([1..5])              = {Lessons.Lists.SumWithFor(listNumbers)}   ← uses .Count in the for header");
+
+Console.WriteLine("\n-- Lesson G: instance methods (not statics on Array) --");
+List<int> listToSort = new List<int> { 3, 1, 2 };
+Lessons.Lists.SortInPlace(listToSort);
+Console.WriteLine($"after SortInPlace([3,1,2])       the input is now [{string.Join(", ", listToSort)}]");
+List<int> listToReverse = new List<int> { 1, 2, 3 };
+Lessons.Lists.ReverseInPlace(listToReverse);
+Console.WriteLine($"after ReverseInPlace([1,2,3])    the input is now [{string.Join(", ", listToReverse)}]");
+Console.WriteLine($"FindIndexOf([10,20,30], 20)     = {Lessons.Lists.FindIndexOf(new List<int> { 10, 20, 30 }, 20)}");
+Console.WriteLine($"FindIndexOf([10,20,30], 99)     = {Lessons.Lists.FindIndexOf(new List<int> { 10, 20, 30 }, 99)}   ← -1 when not found");
+Console.WriteLine($"HasValue([10,20,30], 20)        = {Lessons.Lists.HasValue(new List<int> { 10, 20, 30 }, 20)}");
+
+Console.WriteLine("\n-- Lesson H: converting between arrays and lists --");
+Console.WriteLine($"ListFromArray([1,2,3])          = [{string.Join(", ", Lessons.Lists.ListFromArray(new[] { 1, 2, 3 }))}]");
+Console.WriteLine($"ArrayFromList([1,2,3])          = [{string.Join(", ", Lessons.Lists.ArrayFromList(new List<int> { 1, 2, 3 }))}]");
+
+Console.WriteLine("\n=== LISTS — your exercises ===");
+Console.WriteLine("Implement each method in Exercises/Lists.cs, then uncomment below.\n");
+
+// Console.WriteLine($"SumOfList([1,2,3,4])             = {Exercises.Lists.SumOfList(new List<int> { 1, 2, 3, 4 })}");
+// Console.WriteLine($"FindLargest([3,1,4,1,5,9])       = {Exercises.Lists.FindLargest(new List<int> { 3, 1, 4, 1, 5, 9 })}");
+// Console.WriteLine($"CountEvens([1,2,3,4,5,6])        = {Exercises.Lists.CountEvens(new List<int> { 1, 2, 3, 4, 5, 6 })}");
+// Console.WriteLine($"CountPositives([3,-1,0,7,-5])    = {Exercises.Lists.CountPositives(new List<int> { 3, -1, 0, 7, -5 })}");
+// Console.WriteLine($"FirstIndexOf([10,20,30,20], 20)  = {Exercises.Lists.FirstIndexOf(new List<int> { 10, 20, 30, 20 }, 20)}");
+// Console.WriteLine($"SumUntilNegative([1,2,3,-1,10])  = {Exercises.Lists.SumUntilNegative(new List<int> { 1, 2, 3, -1, 10 })}");
+// Console.WriteLine($"ReverseList([1,2,3,4])           = [{string.Join(", ", Exercises.Lists.ReverseList(new List<int> { 1, 2, 3, 4 }))}]");
+
+
+Console.WriteLine("\n\n=== STRUCTS — examples ===\n");
+
+Console.WriteLine("-- Lesson E: instantiating and using --");
+Lessons.Student ada = Lessons.Structs.MakeAda();
+Console.WriteLine($"MakeAda()              = {ada.FirstName} {ada.LastName}, age {ada.Age}");
+Console.WriteLine($"AdaFullName()          = \"{Lessons.Structs.AdaFullName()}\"");
+Console.WriteLine($"AdaIsAdult()           = {Lessons.Structs.AdaIsAdult()}");
+Console.WriteLine($"WithSetter().Age       = {Lessons.Structs.WithSetter().Age}   ← property setter mutated this copy");
+
+Console.WriteLine("\n-- Lesson F: STRUCTS ARE VALUE TYPES (copied on assign / on method call) --");
+(Lessons.Student original, Lessons.Student copy) = Lessons.Structs.AssignmentCopiesStruct();
+Console.WriteLine($"AssignmentCopiesStruct()        original.Age = {original.Age}, copy.Age = {copy.Age}");
+Console.WriteLine("                                ↑ s2 = s1 made an independent COPY — s1 untouched");
+Console.WriteLine($"CallerAgeAfterBirthdayGotcha()  = {Lessons.Structs.CallerAgeAfterBirthdayGotcha()}   ← method mutated a COPY; caller still 36");
+Console.WriteLine($"CallerAgeAfterBirthdayFixed()   = {Lessons.Structs.CallerAgeAfterBirthdayFixed()}   ← fix: return the modified struct and reassign");
+
+Console.WriteLine("\n=== STRUCTS — your exercises ===");
+Console.WriteLine("Implement Point in Exercises/Structs.cs, then uncomment below.\n");
+
+// Exercises.Point origin = new Exercises.Point(0, 0);
+// Exercises.Point p = new Exercises.Point(3, 4);
+// Console.WriteLine($"new Point(3, 4).X, .Y               = {p.X}, {p.Y}");
+// Console.WriteLine($"new Point(0, 0).IsOrigin()          = {origin.IsOrigin()}");
+// Console.WriteLine($"new Point(3, 4).IsOrigin()          = {p.IsOrigin()}");
+// Console.WriteLine($"origin.DistanceTo(new Point(3, 4))  = {origin.DistanceTo(p)}");
+// Exercises.Point moved = p.Translate(10, 20);
+// Console.WriteLine($"new Point(3, 4).Translate(10, 20)   = ({moved.X}, {moved.Y})");
+
+
+Console.WriteLine("\n\n=== CLASSES — examples ===\n");
+
+Console.WriteLine("-- Lesson E-demo: instantiating and using --");
+Console.WriteLine($"PhysicsCount()         = {Lessons.Classes.PhysicsCount()}");
+Console.WriteLine($"PhysicsNames()         = [{string.Join(", ", Lessons.Classes.PhysicsNames())}]");
+Console.WriteLine($"RemoveTuring()         = {Lessons.Classes.RemoveTuring()}   ← true when a matching student was removed");
+
+Console.WriteLine("\n-- Lesson E: CLASSES ARE REFERENCE TYPES (shared on assign / on method call) --");
+(int c1Count, int c2Count) = Lessons.Classes.AssignmentSharesReference();
+Console.WriteLine($"AssignmentSharesReference()   c1.Count = {c1Count}, c2.Count = {c2Count}");
+Console.WriteLine("                              ↑ c2 = c1 shared the SAME Course — enrolling via c2 is visible via c1");
+Console.WriteLine($"CallerCountAfterEnroll()      = {Lessons.Classes.CallerCountAfterEnroll()}   ← method mutated caller's course; contrast with structs above!");
+
+Console.WriteLine("\n=== CLASSES — your exercises ===");
+Console.WriteLine("Implement ShoppingCart in Exercises/Classes.cs, then uncomment below.\n");
+
+// Exercises.ShoppingCart cart = new Exercises.ShoppingCart();
+// cart.Add("apple");
+// cart.Add("pear");
+// Console.WriteLine($"cart.Count() after 2 Adds       = {cart.Count()}");
+// Console.WriteLine($"cart.Contains(\"apple\")          = {cart.Contains("apple")}");
+// Console.WriteLine($"cart.Contains(\"banana\")         = {cart.Contains("banana")}");
+// Console.WriteLine($"cart.Remove(\"apple\")            = {cart.Remove("apple")}");
+// Console.WriteLine($"cart.Count() after 1 Remove     = {cart.Count()}");
+
+
+Console.WriteLine("\n\n=== STRUCTS vs CLASSES — same code, opposite outcome ===");
+Console.WriteLine("Two types with identical shape. The ONLY difference is the keyword.\n");
+
+Console.WriteLine("-- Experiment 1: b = a (assignment) --");
+(Lessons.PointStruct sA, Lessons.PointStruct sB) = Lessons.StructsVsClasses.StructAssignmentCopies();
+Console.WriteLine($"StructAssignmentCopies()   a.X = {sA.X},  b.X = {sB.X}   ← struct: b is a COPY, a untouched");
+(Lessons.PointClass cA, Lessons.PointClass cB) = Lessons.StructsVsClasses.ClassAssignmentShares();
+Console.WriteLine($"ClassAssignmentShares()    a.X = {cA.X}, b.X = {cB.X}   ← class:  a and b are the SAME object");
+
+Console.WriteLine("\n-- Experiment 2: Mutate(a) (method call) --");
+Console.WriteLine($"StructPassingCopies().X    = {Lessons.StructsVsClasses.StructPassingCopies().X}    ← struct: helper mutated a COPY; caller untouched");
+Console.WriteLine($"ClassPassingShares().X     = {Lessons.StructsVsClasses.ClassPassingShares().X}   ← class:  helper mutated the caller's object");

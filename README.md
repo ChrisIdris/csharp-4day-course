@@ -104,6 +104,10 @@ Complete each theme fully before moving to the next:
 2. **Strings** — `char` vs `string`, quote styles (regular / verbatim / raw), immutability, comparison, `Parse`/`TryParse`, format specifiers. Lesson in `Lessons/Strings.cs`, exercises in `Exercises/Strings.cs`.
 3. **Arrays** — declaration forms, strong typing, default values, indexing and `.Length`, out-of-bounds exceptions, iteration (`foreach` vs `for`), `Array.Sort` / `Reverse` / `IndexOf`. Lesson in `Lessons/Arrays.cs`, exercises in `Exercises/Arrays.cs`.
 4. **ControlFlow** — `if` / `else if` syntax differences, the no-braces gotcha, `switch` statement (C#'s break flip vs JavaScript), ternary refresher, `while` + `break`, classic `for`, `foreach`. Lesson in `Lessons/ControlFlow.cs`, exercises in `Exercises/ControlFlow.cs`.
+5. **Lists** — `List<T>` and a generics primer, `.Count` vs `.Length`, `Add` / `Insert` / `Remove` / `RemoveAt` / `Clear`, instance methods vs `Array`'s statics, array↔list conversion. Lesson in `Lessons/Lists.cs`, exercises in `Exercises/Lists.cs`.
+6. **Structs** — defining your own value types, properties with `{ get; set; }`, constructors, instance methods, and the big C#-specific point: structs are **value types** (copied on assignment and on method calls). Lesson in `Lessons/Structs.cs`, exercises in `Exercises/Structs.cs`.
+7. **Classes** — same syntax as structs (properties, constructor, methods), but classes are **reference types** — assigning or passing an instance shares the same object. Worked example: a `Course` class that holds a list of `Student`s (from the Structs lesson) with `Enroll` / `Remove` / `Count`. Lesson in `Lessons/Classes.cs`, exercises in `Exercises/Classes.cs`.
+8. **Structs vs Classes** — synthesis: two types with identical shape (`PointStruct` and `PointClass`) run through the same two experiments (assignment, method-passing) to show that **one keyword flipped** produces opposite outcomes every time. Lesson in `Lessons/StructsVsClasses.cs` (no exercises — compare/contrast only).
 
 Once all four themes' core exercises are green in Test Explorer, tackle the advanced sections:
 
