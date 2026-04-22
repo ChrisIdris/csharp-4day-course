@@ -1,33 +1,11 @@
 using Fundamentals.Exercises;
 
-namespace Fundamentals.Tests;
+namespace Fundamentals.Tests.Exercises;
 
+// Tests for the exercises in Exercises/Numbers.cs.
+// These will fail until the student implements each method.
 public class NumbersTests
 {
-    // ── Lesson guards — protect the teaching examples from accidental "fixes" ──
-
-    [Fact]
-    public void LessonA_DoubleMultipliesByTwo()
-        => Assert.Equal(42, Numbers.Double(21));
-
-    [Fact]
-    public void LessonB_CountUpToFiveReturnsFive()
-        => Assert.Equal(5, Numbers.CountUpToFive());
-
-    [Fact]
-    public void LessonD_IntegerDivisionTruncates()
-        => Assert.Equal(3, Numbers.DivideIntegers(7, 2));
-
-    [Fact]
-    public void LessonE_DoubleToIntTruncates()
-        => Assert.Equal(3, Numbers.DoubleToInt(3.9));
-
-    [Fact]
-    public void LessonE_CastingFixesTruncation()
-        => Assert.Equal(3.5, Numbers.DivideWithCasting(7, 2));
-
-    // ── Exercises ──
-
     [Theory]
     [InlineData(3, 4, 7)]
     [InlineData(-1, 1, 0)]
