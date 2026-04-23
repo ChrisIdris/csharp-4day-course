@@ -136,7 +136,12 @@ public static class ControlFlow
     //       Return `i` as soon as you find a match.
     public static int FirstIndexOf(int[] nums, int target)
     {
-        throw new NotImplementedException("TODO: for loop with index; return i when nums[i] == target; else -1");
+        for (int i = 0; i < nums.Length; i++ )
+        {
+            if (nums[i] == target) return i;
+
+        }
+        return -1;
     }
 
     // EXERCISE 7: SumUntilNegative
