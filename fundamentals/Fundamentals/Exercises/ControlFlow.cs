@@ -10,6 +10,18 @@ public static class ControlFlow
     // Hint: if / else if / else chain. See Lesson A.
     public static string Sign(int n)
     {
+        if(n == 0)
+        {
+            return "zero";
+        }
+        else if(n < 0)
+        {
+            return "negative";
+        }
+        else
+        {
+            return "positive";
+        }
         throw new NotImplementedException("TODO: compare n against 0 with if / else if / else");
     }
 
@@ -22,7 +34,29 @@ public static class ControlFlow
     // Hint: combine conditions with && and ||, or nest ifs. Either approach works.
     public static bool IsLeapYear(int year)
     {
-        throw new NotImplementedException("TODO: apply the divisible-by-4 / 100 / 400 rules");
+        if(year % 4 == 0)
+        {
+            if(year % 100 == 0)
+            {
+                if(year % 400 == 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return true;
+            }
+        }
+        else
+        {
+            return false;
+        }
+        //throw new NotImplementedException("TODO: apply the divisible-by-4 / 100 / 400 rules");
     }
 
     // EXERCISE 3: DayName
@@ -31,7 +65,34 @@ public static class ControlFlow
     // Hint: switch STATEMENT with 7 cases + default. See Lesson D.
     public static string DayName(int day)
     {
-        throw new NotImplementedException("TODO: switch on day, return the 3-letter name");
+        string dayName = "";
+        switch (day)
+        {
+            case 1:
+                dayName = "Mon";
+                break;
+            case 2:
+                dayName = "Tue";
+                break;
+            case 3:
+                dayName = "Wed";
+                break;
+            case 4:
+                dayName = "Thu";
+                break;
+            case 5:
+                dayName = "Fri";
+                break;
+            case 6:
+                dayName = "Sat";
+                break;
+            case 7:
+                dayName = "Sun";
+                break;
+
+        }
+        return dayName;
+        //throw new NotImplementedException("TODO: switch on day, return the 3-letter name");
     }
 
     // EXERCISE 4: IsVowel
@@ -40,7 +101,15 @@ public static class ControlFlow
     // Hint: switch STATEMENT with stacked case labels. Lowercase first via char.ToLower(c).
     public static bool IsVowel(char c)
     {
-        throw new NotImplementedException("TODO: switch on the lowercased char, stack the vowel cases");
+        if (char.ToLower(c) == 'a' || char.ToLower(c) == 'e' || char.ToLower(c) == 'i' || char.ToLower(c) == 'o' || char.ToLower(c) == 'u')
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
     }
 
     // EXERCISE 5: CountPositives
@@ -49,7 +118,15 @@ public static class ControlFlow
     // Hint: foreach + if. See Lesson H.
     public static int CountPositives(int[] nums)
     {
-        throw new NotImplementedException("TODO: foreach over nums, increment a counter when > 0");
+        int positives = 0;
+        foreach (int num in nums)
+        {
+            if (num > 0)
+            {
+                positives++;
+            }
+        }
+        return positives;
     }
 
     // EXERCISE 6: FirstIndexOf

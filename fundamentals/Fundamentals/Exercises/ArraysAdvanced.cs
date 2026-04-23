@@ -25,7 +25,20 @@ public static class ArraysAdvanced
     //     result[c, r] = matrix[r, c].
     public static int[,] Transpose(int[,] matrix)
     {
-        throw new NotImplementedException("TODO: new int[cols, rows], copy with indices swapped");
+        int rows = matrix.GetLength(0);
+        int cols = matrix.GetLength(1);
+
+        int[,] result = new int[cols, rows];
+
+        for (int r = 0; r < rows; r++)
+        {
+            for (int c = 0; c < cols; c++)
+            {
+                result[c, r] = matrix[r, c];
+            }
+        }
+
+        return result;
     }
 
     // ADVANCED EXERCISE 2: HasDuplicates
