@@ -255,8 +255,10 @@ make it pretty.
 ## Extensions (stretch work — no tests provided)
 
 Finish the core spec first. Then pick any of these and write the code **plus
-the tests** yourself. Good practice for the TDD cadence you saw in the red-to-green
-phase.
+the tests** yourself. Good practice for the TDD cadence you saw in the
+red-to-green phase.
+
+The list is rough-ordered easiest → hardest.
 
 ### 1. Transfers
 
@@ -283,17 +285,209 @@ Questions to design around:
 - What does `TotalAssets` report when some accounts are in the red?
 - Should the statement call out negative balances differently?
 
-### 3. Interest and fees (advanced)
+### 3. Interest and fees
 
-Add a monthly `ApplyInterest(decimal rate)` method on `Bank` that credits every
-account by `balance * rate` (with a transaction description like
-`"Interest 0.5%"`). Also support monthly fees on accounts below some threshold.
+Add `void ApplyInterest(decimal rate)` on `Bank` that credits every account by
+`balance * rate` with a transaction description like `"Interest 0.5%"`. Also
+support a monthly fee on accounts below some threshold.
 
-Think about decimals and rounding — `decimal.Round` is your friend, not `Math.Round`.
+Think about decimals and rounding — `decimal.Round` is your friend, not
+`Math.Round`.
 
-### 4. Account types (polymorphism)
+### 4. Statement by date range
 
-Introduce `SavingsAccount` and `CurrentAccount` as subclasses of `Account`, each
-with different rules (savings earns interest but doesn't allow overdraft;
-current is the reverse). This is a natural lead-in to inheritance and
-`virtual`/`override`, if you've covered those.
+Add an overload: `string Statement(DateTime from, DateTime to)` on `Account`.
+The existing no-arg `Statement()` keeps its current behaviour; the new one
+includes only transactions whose `Timestamp` falls in `[from, to]` (decide and
+document whether both ends are inclusive).
+
+Exercises **method overloading** and **DateTime comparison**. Skim the
+DateTime mini-lesson above if you've forgotten the format tokens.
+
+### 5. Categorised transactions
+
+Introduce a `TransactionCategory` enum (`Food`, `Rent`, `Salary`, `Transfer`,
+`Interest`, `Fees`, `Other`). Add a `Category` field to `Transaction` (you'll
+extend the constructor). Then add a `FindTransactions` overload:
+
+```csharp
+List<Transaction> FindTransactions(TransactionCategory category)
+```
+
+Exercises **enums**, **method overloading**, and a small migration — every
+existing `new Transaction(...)` call now needs a category.
+
+### 6. Custom exception type
+
+Define `InsufficientFundsException : Exception` carrying two public
+properties: `decimal RequestedAmount` and `decimal AvailableBalance`. Replace
+the raw `InvalidOperationException` in `Account.Withdraw` with this typed
+exception.
+
+Exercises **custom exceptions** and **inheritance from `Exception`**. Callers
+can now `catch (InsufficientFundsException ex)` and read
+`ex.AvailableBalance` directly, instead of sniffing at an exception message.
+
+### 7. Generic ledger
+
+Extract the private list of transactions inside `Account` into a small
+generic class of your own:
+
+```csharp
+public class Ledger<T>
+{
+    // Add, Count, iterate, filter — whatever Account needs of it.
+}
+```
+
+Then change `Account` to use `Ledger<Transaction>` in place of its current
+`List<Transaction>` field. The public `Account` API must NOT change — every
+existing test stays green.
+
+Exercises **writing** a generic (not just consuming `List<T>`). Think about
+which operations genuinely belong on a generic ledger versus being
+transaction-specific.
+
+### 8. Account type hierarchy
+
+Introduce two subclasses of `Account`:
+
+- **`SavingsAccount`** — earns interest. Give `Account` a `virtual void
+  ApplyInterest(decimal rate)` that does nothing (or is abstract, your call);
+  `SavingsAccount` overrides it to credit `Balance * rate` as a `Credit`
+  transaction. Overdrafts are NOT allowed — the base `Withdraw` works as-is.
+- **`CurrentAccount`** — has an `OverdraftLimit`. Overrides `Withdraw` to let
+  the balance go negative up to that limit. Does nothing for interest.
+
+Then split `Bank.OpenAccount` into `OpenSavingsAccount(...)` and
+`OpenCurrentAccount(...)`, each returning the appropriate subclass.
+
+Exercises **inheritance**, **`virtual` / `override`**, and **polymorphism**
+in the students' own code — `Bank.TotalAssets` keeps iterating `Account`
+and summing `Balance`, even though each element might now be a Savings or
+Current.
+
+Design questions to think about:
+
+- Should the base `Account` itself be `abstract` once the subclasses exist?
+- What's the right default `ApplyInterest` on the base class — no-op, or
+  throw? Why?
+- Does `Transfer` (Extension §1) need to know which kind of account it's
+  moving money between?
+
+### 9. Exporters — one abstract base, many formats (advanced)
+
+Build a small exporter framework that turns an `Account` into some external
+format. This is the OOP capstone: one abstract base class, three concrete
+subclasses, polymorphism, and real file I/O.
+
+Start with the shape:
+
+```csharp
+public abstract class Exporter
+{
+    public abstract string Export(Account account);
+
+    public void ExportToFile(Account account, string filePath)
+    {
+        string content = Export(account);
+        // write `content` to `filePath` on disk — see File I/O docs below
+    }
+}
+```
+
+Then build three concrete exporters.
+
+#### 9a. `CsvExporter : Exporter`
+
+Outputs comma-separated values — one header row, one row per transaction:
+
+```
+Timestamp,Type,Amount,Description
+2026-04-22T14:30:00Z,Credit,1250.75,Opening deposit
+2026-04-22T14:35:00Z,Credit,89.99,Deposit
+2026-04-22T14:40:00Z,Debit,12.50,Withdrawal
+```
+
+Questions to think about:
+
+- How do you handle descriptions that contain commas or quotes? (This is
+  exactly the CSV parsing problem they met in the strings advanced exercise,
+  now in reverse.)
+- Should account-holder metadata live in the file? CSV has no header region,
+  so most tools put it in a separate "info" file, or as `# comment` lines
+  prefixed with `#`.
+
+#### 9b. `MarkdownTableExporter : Exporter`
+
+Outputs a GitHub-flavoured markdown table:
+
+```markdown
+# Statement — ACC-1000 — Ada Lovelace
+**Balance:** 1,780.91
+
+| Timestamp        | Type   |   Amount | Description     |
+|------------------|--------|---------:|-----------------|
+| 2026-04-22 14:30 | CREDIT |  1250.75 | Opening deposit |
+| 2026-04-22 14:35 | CREDIT |    89.99 | Deposit         |
+| 2026-04-22 14:40 | DEBIT  |    12.50 | Withdrawal      |
+```
+
+Exercise: **column-width alignment**. You'll need to compute each column's
+widest value before rendering rows — otherwise the table stays readable as
+plain text even though markdown tolerates ragged pipes.
+
+#### 9c. `ExcelExporter : Exporter` — super advanced
+
+Produce a real `.xlsx` file. The .NET standard library doesn't ship Excel
+support out of the box — you'll need to add a NuGet package.
+
+Your task:
+
+1. **Research.** Look up **ClosedXML** (Apache-licensed, friendly API) or
+   the **Open XML SDK** (official Microsoft, lower-level and harder). Pick
+   one. Reading a library's README and sample code IS the exercise here.
+2. **Add the package** to your `Bank.csproj`:
+   `dotnet add package ClosedXML`
+   (or whichever you chose — the command is the same shape).
+3. **Build the workbook** inside `ExcelExporter`: a worksheet named
+   `"Statement"`, a header row, one row per transaction, and account
+   metadata in a second sheet or at the top.
+4. **Save it to disk.** Writing a binary `.xlsx` doesn't fit the
+   `Export(Account) → string` contract — so you'll need to either:
+   - **Override `ExportToFile`** in `ExcelExporter` and do the workbook-save
+     directly, while `Export` returns something like a base64 blob or
+     throws `NotSupportedException`; **or**
+   - **Refactor the base class.** Change `Exporter` to have an abstract
+     `void ExportToFile(Account account, string filePath)` and let each
+     subclass own its own serialisation.
+
+   Option 2 is the cleaner answer once you realise "string" doesn't
+   generalise to binary formats — and refactoring the base class in response
+   to a subclass that doesn't fit is one of the real lessons of working
+   with inheritance.
+
+Stretch: format the amount column as currency (`£#,##0.00`), freeze the
+header row, auto-size columns. ClosedXML docs cover all of these.
+
+#### File I/O — essential reading
+
+Writing a string to a text file is a two-liner in .NET, but skim the docs
+so you know what's available:
+
+- [File and stream I/O overview](https://learn.microsoft.com/en-us/dotnet/standard/io/) —
+  the high-level map.
+- [`System.IO.File`](https://learn.microsoft.com/en-us/dotnet/api/system.io.file) —
+  `File.WriteAllText(path, content)` is the one-call path for text formats.
+- [How to read from and write to a newly created data file](https://learn.microsoft.com/en-us/dotnet/standard/io/how-to-read-and-write-to-a-newly-created-data-file) —
+  a walkthrough tutorial.
+- [`System.IO.StreamWriter`](https://learn.microsoft.com/en-us/dotnet/api/system.io.streamwriter) —
+  the streaming option; useful for large files and pairs with `using`.
+- [`System.IO.Path`](https://learn.microsoft.com/en-us/dotnet/api/system.io.path) —
+  combining paths safely across Windows / Linux / macOS.
+
+`using` statements (automatic cleanup) show up the moment you open a stream
+manually. Treat them as "do exactly this for now" for CSV and markdown —
+for Excel, the ClosedXML API takes care of disposal for you. If you're
+curious, read
+[`IDisposable` and `using` statements](https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/using-objects).
