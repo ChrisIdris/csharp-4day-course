@@ -159,6 +159,24 @@ public static class Exceptions
     // always sits right next to `TryParse`. If you ever find yourself
     // writing `try { int.Parse(...) }` to handle expected-bad input,
     // reach for TryParse instead.
+    //
+    // The pattern isn't magic — it's just a convention. You can author your
+    // own TryXxx method whenever you have a `Xxx` that throws on a
+    // predictable bad input. Here's a TryXxx twin of `Divide` from Lesson B:
+    // same job, but instead of throwing on b == 0 it returns `false` and
+    // leaves `result` at 0. The caller decides what to do about it.
+    public static bool TryDivide(int a, int b, out int result)
+    {
+        // e.g. TryDivide(10, 2, out r)  == true,  r == 5
+        //      TryDivide(10, 0, out r)  == false, r == 0 (no throw)
+        if (b == 0)
+        {
+            result = 0;
+            return false;
+        }
+        result = a / b;
+        return true;
+    }
 
     public static int ParsePreferred(string text, int fallback)
     {
