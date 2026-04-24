@@ -162,6 +162,12 @@ public static class ControlFlow
     //       nums[nums.Length - 1 - i] into result[i].
     public static int[] ReverseArray(int[] nums)
     {
+        int[] newNums = new int[nums.Length];
+        for(int i = 0; i < nums.Length; i++)
+        {
+            newNums[i] = nums[nums.Length - 1 - i];
+        }
+        return newNums;
         throw new NotImplementedException("TODO: allocate a new int[], copy nums in reverse order");
     }
 }

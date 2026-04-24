@@ -76,7 +76,7 @@ public static class Arrays
             reversedArray[j] = numbers[i];
             j++;
         }
-
+        return reversedArray;
         throw new NotImplementedException("TODO: build a new array with indices walking in opposite directions");
     }
 }

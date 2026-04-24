@@ -16,7 +16,10 @@ public static class Exceptions
     //       Use `nameof(n)` for the parameter name.
     public static int RequirePositive(int n)
     {
-        throw new NotImplementedException("TODO: throw ArgumentException when n <= 0, otherwise return n");
+        if (n <= 0)
+            throw new ArgumentException("Number is not positive");
+        else
+            return n;
     }
 
     // EXERCISE 2: Withdraw
@@ -30,7 +33,12 @@ public static class Exceptions
     //       isn't in a state where this operation makes sense".
     public static int Withdraw(int balance, int amount)
     {
-        throw new NotImplementedException("TODO: throw InvalidOperationException when amount > balance, else return balance - amount");
+        balance = balance - amount;
+        if(balance < 0)
+            throw new InvalidOperationException("insufficient funds");
+        else if(amount < 0)
+            throw new InvalidOperationException("amount cannot be negative");
+        else return balance;
     }
 
     // EXERCISE 3: SafeWithdraw
@@ -43,6 +51,13 @@ public static class Exceptions
     //       Do NOT catch every exception — only the specific type you expect.
     public static int SafeWithdraw(int balance, int amount)
     {
-        throw new NotImplementedException("TODO: try Withdraw; on InvalidOperationException return balance unchanged");
+        try
+        {
+            return Withdraw(balance, amount);
+        }
+        catch (InvalidOperationException)
+        {
+            return balance;
+        }
     }
 }

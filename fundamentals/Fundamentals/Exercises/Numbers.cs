@@ -8,6 +8,7 @@ public static class Numbers
     // Return the sum of two integers.
     public static int Add(int a, int b)
     {
+        return a + b;
         throw new NotImplementedException("TODO: return a + b");
     }
 
@@ -15,7 +16,7 @@ public static class Numbers
     // Return the area of a rectangle (width × height).
     public static double RectangleArea(double width, double height)
     {
-        throw new NotImplementedException("TODO: multiply width by height");
+        return width * height;
     }
 
     // EXERCISE 3:
@@ -25,6 +26,6 @@ public static class Numbers
     // not 1.8. Cast appropriately so you get the right answer.
     public static double CelsiusToFahrenheit(double celsius)
     {
-        throw new NotImplementedException("TODO: apply the formula, mind the division");
+        return celsius * 9 / 5 + 32;
     }
 }

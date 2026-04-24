@@ -39,6 +39,7 @@ public static class ArraysAdvanced
         }
 
         return result;
+       // throw new NotImplementedException("TODO: new int[cols, rows], copy with indices swapped");
     }
 
     // ADVANCED EXERCISE 2: HasDuplicates
@@ -55,6 +56,16 @@ public static class ArraysAdvanced
     //       Only return false once every pair has been checked.
     public static bool HasDuplicates(int[] numbers)
     {
-        throw new NotImplementedException("TODO: nested loops, compare each pair of indices");
+        for (int i = 0; i < numbers.Length; i++)
+        {
+            for (int j = i + 1; j < numbers.Length; j++)
+            {
+                if (numbers[i] == numbers[j])
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

@@ -11,7 +11,12 @@ public static class Lists
     // Hint: Lesson F showed two ways to iterate a list — pick one and accumulate a total.
     public static int SumOfList(List<int> numbers)
     {
-        throw new NotImplementedException("TODO: iterate and accumulate a total");
+        int sum= 0;
+        foreach (var n in numbers)
+        {
+            sum += n;
+        }
+        return sum;
     }
 
     // EXERCISE 2: FindLargest
@@ -22,7 +27,13 @@ public static class Lists
     //       and update your "largest so far" whenever you see something bigger.
     public static int FindLargest(List<int> numbers)
     {
-        throw new NotImplementedException("TODO: track the largest seen so far");
+        int largestNumber = numbers[0];
+        foreach (var n in numbers)
+        {
+            if(n > largestNumber)
+                largestNumber = n;
+        }
+        return largestNumber;
     }
 
     // EXERCISE 3: CountEvens
@@ -32,7 +43,13 @@ public static class Lists
     // Hint: a number is even when `n % 2 == 0`. Increment a counter each time.
     public static int CountEvens(List<int> numbers)
     {
-        throw new NotImplementedException("TODO: count values where n % 2 == 0");
+        int count = 0;
+        foreach (var n in numbers)
+        {
+            if(n % 2 == 0)
+                count++;
+        }
+        return count;
     }
 
     // EXERCISE 4: CountPositives
@@ -41,7 +58,13 @@ public static class Lists
     // Hint: foreach + if. See Lesson F.
     public static int CountPositives(List<int> numbers)
     {
-        throw new NotImplementedException("TODO: foreach over numbers, increment a counter when > 0");
+        int countPositive = 0;
+        foreach(var n in numbers)
+        {           
+            if(n > 0)
+            countPositive++;
+        }
+        return countPositive;
     }
 
     // EXERCISE 5: FirstIndexOf
@@ -53,7 +76,13 @@ public static class Lists
     //       Return `i` as soon as you find a match; return -1 after the loop.
     public static int FirstIndexOf(List<int> numbers, int target)
     {
-        throw new NotImplementedException("TODO: for loop with index; return i when numbers[i] == target; else -1");
+        int first = 0;
+        for(int i = 0; i < numbers.Count; i++)
+        {
+            if(numbers[i] == target)
+                return i;
+        }
+        return -1;
     }
 
     // EXERCISE 6: SumUntilNegative
@@ -64,7 +93,14 @@ public static class Lists
     // Hint: foreach + if + break.
     public static int SumUntilNegative(List<int> numbers)
     {
-        throw new NotImplementedException("TODO: foreach; if n < 0 break; otherwise add to total");
+        int sum = 0;
+        foreach(var n in numbers)
+        {
+            if(n < 0)
+                break;
+            sum += n;
+        }
+        return sum;
     }
 
     // EXERCISE 7: ReverseList
@@ -76,6 +112,11 @@ public static class Lists
     //       input from the last index down to 0, calling Add on the new list.
     public static List<int> ReverseList(List<int> numbers)
     {
-        throw new NotImplementedException("TODO: new List<int>(); walk input last-to-first; Add each element");
+        List<int> reversedList = new List<int>();
+        for (int i = numbers.Count - 1; i >= 0; i--)
+        {
+            reversedList.Add(numbers[i]);
+        }
+        return reversedList;
     }
 }

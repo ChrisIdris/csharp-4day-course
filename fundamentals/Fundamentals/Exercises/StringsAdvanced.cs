@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace Fundamentals.Exercises;
 
 // Theme: Strings (advanced) — exercises for you to implement.
@@ -33,6 +35,29 @@ public static class StringsAdvanced
     // You don't need to handle escaped quotes ("" inside a quoted field).
     public static string[] ParseCsvRow(string row)
     {
-        throw new NotImplementedException("TODO: walk the chars, track insideQuotes, build each field with StringBuilder");
+        var fields = new List<string>();
+        var currentField = new StringBuilder();
+        bool insideQuotes = false;
+
+        foreach (char c in row)
+        {
+            if (c == '"')
+            {
+                insideQuotes = !insideQuotes;
+            }
+            else if (c == ',' && !insideQuotes)
+            {
+                fields.Add(currentField.ToString());
+                currentField.Clear();
+            }
+            else
+            {
+                currentField.Append(c);
+            }
+        }
+
+        fields.Add(currentField.ToString());
+
+        return fields.ToArray();
     }
 }
