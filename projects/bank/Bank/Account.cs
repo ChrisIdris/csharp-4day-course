@@ -94,6 +94,7 @@ public class Account
     // Returns a printable multi-line bank statement. Format is deliberately
     // our own choice here — the tests only check that the required fields
     // appear in the output, so you're free to make it pretty.
+    //TODO: return a multi-line string — header with AccountNumber, Holder, and Balance; then a row per transaction showing timestamp, CREDIT/DEBIT, amount, and description. See the `decimal` and DateTime mini-lessons in README.md for formatting.
     public string Statement()
     {
         var sb = new StringBuilder();
@@ -119,6 +120,14 @@ public class Account
     // Results are sorted oldest-first by Timestamp.
     public List<Transaction> FindTransactions(string search)
     {
-        throw new NotImplementedException("TODO: return every transaction whose Description contains `search` (case-insensitive), sorted by Timestamp oldest-first");
+        if (string.IsNullOrEmpty(search))
+        {
+            return new List<Transaction>();
+        }
+
+        return transactions
+            .Where(t => t.Description.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0)
+            .OrderBy(t => t.Timestamp)
+            .ToList();
     }
 }
