@@ -76,7 +76,6 @@ public static class Lists
     //       Return `i` as soon as you find a match; return -1 after the loop.
     public static int FirstIndexOf(List<int> numbers, int target)
     {
-        int first = 0;
         for(int i = 0; i < numbers.Count; i++)
         {
             if(numbers[i] == target)

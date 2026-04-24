@@ -72,5 +72,6 @@ public static class Enums
     // Hint: Enum.TryParse<T>(text, ignoreCase: true, out state) does exactly this.
     public static bool ParseState(string text, out VendingMachineState state)
     {
+        return Enum.TryParse(text, ignoreCase: true, out state);
     }
 }
