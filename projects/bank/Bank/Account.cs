@@ -25,34 +25,70 @@ public class Account
 
     public Account(string accountNumber, string holder, decimal startingBalance)
     {
-        throw new NotImplementedException("TODO: throw ArgumentException if startingBalance < 0. Assign AccountNumber and Holder. Initialise transactions = new List<Transaction>(). If startingBalance > 0, append an opening Credit transaction with description \"Opening deposit\".");
+        if (startingBalance < 0)
+            throw new ArgumentOutOfRangeException(nameof(startingBalance));
+
+        this.AccountNumber = accountNumber;
+        this.Holder = holder;
+        this.transactions = new List<Transaction>();
+        if (startingBalance > 0)
+        {
+            this.transactions.Add(new Transaction(TransactionType.Credit, startingBalance, "Opening deposit"));
+        }
     }
 
     // Computed on every read — there's no stored balance field.
     public decimal Balance
     {
-        get { throw new NotImplementedException("TODO: iterate transactions, add Credit amounts, subtract Debit amounts, return the running total"); }
+        get
+        {
+            decimal balance = 0;
+            foreach (var transaction in transactions)
+            {
+                if (transaction.Type == TransactionType.Credit)
+                {
+                    balance += transaction.Amount;
+                }
+                else if (transaction.Type == TransactionType.Debit)
+                {
+                    balance -= transaction.Amount;
+                }
+            }
+            return balance;
+        }
     }
 
     public int TransactionCount
     {
-        get { throw new NotImplementedException("TODO: return transactions.Count"); }
+        get { return transactions.Count; }
     }
 
     // Expose a read-only view — callers can enumerate but not Add/Remove.
     public IReadOnlyList<Transaction> Transactions
     {
-        get { throw new NotImplementedException("TODO: return transactions.AsReadOnly()"); }
+        get { return transactions.AsReadOnly(); }
     }
 
     public void Deposit(decimal amount)
     {
-        throw new NotImplementedException("TODO: throw ArgumentException if amount <= 0, then add a Credit transaction with description \"Deposit\"");
+        if (amount <= 0)
+        {
+            throw new ArgumentException("Amount must be positive", nameof(amount));
+        }
+        this.transactions.Add(new Transaction(TransactionType.Credit, amount, "Deposit"));
     }
 
     public void Withdraw(decimal amount)
     {
-        throw new NotImplementedException("TODO: throw ArgumentException if amount <= 0, throw InvalidOperationException if amount > Balance, otherwise add a Debit transaction with description \"Withdrawal\". On failure the transaction must NOT be recorded.");
+        if (amount <= 0)
+        {
+            throw new ArgumentException("Amount must be positive", nameof(amount));
+        }
+        if (amount > Balance)
+        {
+            throw new InvalidOperationException("Insufficient funds");
+        }
+        this.transactions.Add(new Transaction(TransactionType.Debit, amount, "Withdrawal"));
     }
 
     // Returns a printable multi-line bank statement. Format is deliberately
@@ -60,7 +96,23 @@ public class Account
     // appear in the output, so you're free to make it pretty.
     public string Statement()
     {
-        throw new NotImplementedException("TODO: return a multi-line string — header with AccountNumber, Holder, and Balance; then a row per transaction showing timestamp, CREDIT/DEBIT, amount, and description. See the `decimal` and DateTime mini-lessons in README.md for formatting.");
+        var sb = new StringBuilder();
+
+        sb.AppendLine($"Account Statement");
+        sb.AppendLine($"Account Number: {AccountNumber}");
+        sb.AppendLine($"Holder: {Holder}");
+        sb.AppendLine($"Current Balance: {Balance:C}");
+        sb.AppendLine();
+        sb.AppendLine("Transactions:");
+        sb.AppendLine("----------------------------------------");
+
+        foreach (var transaction in transactions)
+        {
+            string type = transaction.Type == TransactionType.Credit ? "CREDIT" : "DEBIT";
+            sb.AppendLine($"{transaction.Timestamp:yyyy-MM-dd HH:mm:ss} | {type,-6} | {transaction.Amount,10:C} | {transaction.Description}");
+        }
+
+        return sb.ToString();
     }
 
     // Case-insensitive substring match on Description.
