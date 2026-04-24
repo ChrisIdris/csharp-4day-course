@@ -151,7 +151,14 @@ public static class ControlFlow
     // Hint: foreach + if + break. See Lesson F for break.
     public static int SumUntilNegative(int[] nums)
     {
-        throw new NotImplementedException("TODO: foreach; if n < 0 break; otherwise add to total");
+        int sum = 0;
+        foreach (int num in nums)
+        {
+            if (num < 0)
+                break;
+            sum += num;
+        }
+        return sum;
     }
 
     // EXERCISE 8: ReverseArray
