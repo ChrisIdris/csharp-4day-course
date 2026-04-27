@@ -18,7 +18,6 @@ public class Bank
         this.Name = name;
         this.accounts = new List<Account>();
         this.nextAccountNumber = 1000;
-        throw new NotImplementedException("TODO: assign Name, initialise accounts = new List<Account>(), and start nextAccountNumber at 1000");
     }
 
     public int AccountCount
@@ -70,7 +69,12 @@ public class Bank
     // Returns true if an account was found and removed, false otherwise.
     public bool CloseAccount(string accountNumber)
     {
-
-        throw new NotImplementedException("TODO: find the matching account and remove it from the list; return true if removed, false if not found");
+        var account = FindAccount(accountNumber);
+        if (account != null)
+        {
+            accounts.Remove(account);
+            return true;
+        }
+        return false;
     }
 }

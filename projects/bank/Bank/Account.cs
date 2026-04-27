@@ -26,7 +26,7 @@ public class Account
     public Account(string accountNumber, string holder, decimal startingBalance)
     {
         if (startingBalance < 0)
-            throw new ArgumentOutOfRangeException(nameof(startingBalance));
+            throw new ArgumentException("Starting balance cannot be negative", nameof(startingBalance));
 
         this.AccountNumber = accountNumber;
         this.Holder = holder;
@@ -90,7 +90,25 @@ public class Account
         }
         this.transactions.Add(new Transaction(TransactionType.Debit, amount, "Withdrawal"));
     }
-
+    public void Transfer(Account targetAccount, decimal amount)
+    {
+        if (targetAccount == null)
+        {
+            throw new ArgumentNullException(nameof(targetAccount));
+        }
+        if (amount <= 0)
+        {
+            throw new ArgumentException("Amount must be positive", nameof(amount));
+        }
+        if (amount > Balance)
+        {
+            throw new InvalidOperationException("Insufficient funds");
+        }
+        // Withdraw from this account
+        this.Withdraw(amount);
+        // Deposit into the target account
+        targetAccount.Deposit(amount);
+    }
     // Returns a printable multi-line bank statement. Format is deliberately
     // our own choice here — the tests only check that the required fields
     // appear in the output, so you're free to make it pretty.

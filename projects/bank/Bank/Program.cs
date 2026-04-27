@@ -54,6 +54,35 @@ foreach (Transaction t in ada.FindTransactions("deposit"))
     Console.WriteLine($"  {t.Timestamp:yyyy-MM-dd HH:mm}   {t.Amount,10:N2}   {t.Description}");
 }
 
+try
+{
+    alan.Withdraw(-100m);
+}
+catch (ArgumentException ex)
+{
+    Console.WriteLine($"Invalid withdrawal on {alan.AccountNumber}: {ex.Message}");
+    Console.WriteLine();
+}
+try
+{
+    ada.Deposit(0m);
+
+}
+catch (ArgumentException ex)
+{
+    Console.WriteLine($"Invalid deposit on {ada.AccountNumber}: {ex.Message}");
+    Console.WriteLine();
+}
+
+Console.WriteLine($"Closing Ada's account {ada.AccountNumber}...");
+bank.CloseAccount(ada.AccountNumber);
+
+Console.WriteLine($"Bank: {bank.Name}");
+Console.WriteLine($"Accounts open: {bank.AccountCount}");
+Console.WriteLine($"Total assets: {bank.TotalAssets:N2}");
+Console.WriteLine();
+
+
 // TODO (students): extend the demo. Ideas —
 //   • Try more edge cases — zero amounts, negative amounts — and catch the
 //     ArgumentException each one throws.

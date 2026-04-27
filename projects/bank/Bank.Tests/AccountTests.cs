@@ -129,6 +129,43 @@ public class AccountTests
         Assert.IsAssignableFrom<IReadOnlyList<Transaction>>(a.Transactions);
     }
 
+    // ── Transfer ────────────────────────────────────────────────────
+
+    [Fact]
+
+    public void Transfer_MovesFundsBetweenAccounts()
+    {
+        Account a1 = new Account("ACC-1000", "Ada", 200m);
+        Account a2 = new Account("ACC-2000", "Bob", 50m);
+        a1.Transfer(a2, 75m);
+        Assert.Equal(125m, a1.Balance);
+        Assert.Equal(125m, a2.Balance);
+    }
+
+    [Fact]
+    public void Transfer_ThrowsOnInsufficientFunds()
+    {
+        Account a1 = new Account("ACC-1000", "Ada", 100m);
+        Account a2 = new Account("ACC-2000", "Bob", 50m);
+        Assert.Throws<InvalidOperationException>(() => a1.Transfer(a2, 150m));
+    }
+
+    [Fact]
+    public void Transfer_ThrowsOnNullTargetAccount()
+    {
+        Account a1 = new Account("ACC-1000", "Ada", 100m);
+        Assert.Throws<ArgumentNullException>(() => a1.Transfer(null, 50m));
+    }
+
+    [Fact]
+    public void Transfer_ThrowsOnNonPositiveAmount()
+    {
+        Account a1 = new Account("ACC-1000", "Ada", 100m);
+        Account a2 = new Account("ACC-2000", "Bob", 50m);
+        Assert.Throws<ArgumentException>(() => a1.Transfer(a2, 0m));
+        Assert.Throws<ArgumentException>(() => a1.Transfer(a2, -50m));
+    }
+
     // ── Statement ──────────────────────────────────────────────────
     // Format is deliberately loose: we check that required fields appear,
     // not the exact layout. Students have freedom to design the output.
